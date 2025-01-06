@@ -1,0 +1,135 @@
+:root{
+    --azulCoespe: #1563b2;
+    --colorTextFooter: #85868C;
+    --negroFooter :rgb(26, 28, 32);
+    --anchoSitioWeb: 1200px;
+    --backgroundSeccion:rgba(0, 0, 0, 0.04);
+    --backgroundOpcion : white;
+    --colorSubtituloOpcion: #85868C;
+    --backgroundColorContactanos: #148BA9;
+    --widthBloqueContenido :65%;
+}
+
+.contenido_Login{
+    display: flex;
+    flex-flow: row wrap;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin: 0px auto;
+}
+
+.contenedor_FiltroNegro{
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bloque_Login{
+    width: 50%;
+    margin: 0px auto;
+    text-align: center;
+}
+
+.bloque_datos_login{
+    max-width: var(--anchoSitioWeb);
+    width: 40%;
+    min-width: 250px;
+    border: 1px solid gray;
+    border-radius: 1em;
+    padding: 50px 0px;
+    background-color: rgba(232, 228, 228, 0.719);
+    margin: 0px auto;
+}
+
+.contenido_Login img{
+    width: 80%;
+    padding: 15px;
+    min-width: 200px;
+    max-width: 250px;
+}
+
+
+.contenido_Login div i svg {
+    height: 120px;
+    width: 120px;
+    margin-bottom: 0;
+    color: var(--azulCoespe);
+}
+
+#form_Login{
+    display: flex;
+    flex-flow: column;
+    width: 70%;
+    margin: 0px auto;
+}
+
+#form_Login input{
+    height: 35px;
+    padding: 5px 10px;
+    width: 100%;
+    margin: 5px 0px;
+    border: 1px solid var(--colorTextFooter);
+    border-radius: 1em;
+}
+
+#form_Login input[type="checkbox"]{
+    height: 15px;
+    width: 10%;
+
+}
+
+#form_Login div{
+    display: flex;
+    flex-flow: row nowrap;
+    text-align: right;
+    align-items: center;
+    justify-content: right;
+    margin: auto 0px;
+}
+
+#form_Login div label{
+    margin: 0px;
+}
+
+
+#form_Login button{
+    background-color: var(--azulCoespe);
+    color: white;
+    padding: 5px 12px;
+    cursor: pointer;
+    border-color: var(--azulCoespe);
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 1em;
+    transition: 0.5s;
+}
+
+#form_Login button:hover{
+    color:var(--azulCoespe);
+    background-color: white;
+    font-size: 16px;
+}
+
+.error{
+    color: rgb(203, 59, 59);
+    font-size: 16px;
+    margin: 15px auto;
+    font-weight: 400;
+}
+
+
+/*para celular */
+
+@media only screen and (max-width: 600px) {
+    .bloque_Login{
+        width: 80%;
+    }
+
+    .contenido_Login img{
+        max-width: 40%;
+        max-height:250px ;
+    }
+
+
+}
