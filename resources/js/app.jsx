@@ -1,104 +1,51 @@
-import './bootstrap';
-import React, { useEffect, useState, useCallback } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import './Config/bootstrap';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
+import Login from './Pages/Login';
 
-import Login from './Componentes/Credenciales/Login';
-import Administrable from './Paginas/Administrable';
+import Documentacion from './Pages/Documentacion';
+
+import { ProtectedRoute } from './Config/ConfiguraconRutas';
+import { PublicRoute } from './Config/ConfiguraconRutas';
 
 function App() {
 
-    const ProtectedRoute = ({ children }) => {
-        const [isAuthenticated, setIsAuthenticated] = useState(false);
-        const [loading, setLoading] = useState(true);
-
-        const navigate = useNavigate(); // Hook para manejar la navegación
-        const token = localStorage.getItem('token');
-
-        const logout = useCallback(() => {
-            localStorage.removeItem('token');
-            setIsAuthenticated(false);
-            alert('Sesión terminada');
-            navigate('/login'); // Redirige al usuario al login
-        }, [navigate]);
-
-        const validateToken = useCallback(async () => {
-            try {
-                await axios.post('/me', {}, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setIsAuthenticated(true);
-            } catch (error) {
-                if (error.response?.status === 401) {
-                    // Manejar token inválido
-                    logout();
-                } else {
-                    logout();
-                }
-            } finally {
-                setLoading(false);
+    const renderProtectedRoute = (path, component, allowedRoles) => (
+        <Route
+            path={path}
+            element={
+                <ProtectedRoute allowedRoles={allowedRoles}>
+                    {component}
+                </ProtectedRoute>
             }
-        }, [token, logout]);
+        />
+    );
 
-        useEffect(() => {
-            if (!token) {
-                setLoading(false);
-                return;
+    const renderPublicRoute = (path, component) => (
+        <Route
+            path={path}
+            element={
+                <PublicRoute>
+                    {component}
+                </PublicRoute>
             }
+        />
+    );
 
-            validateToken();
-        }, [token, validateToken]);
-
-        if (loading) {
-            return (
-                <div className="spinner-border text-light" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                </div>
-            );
-        }
-
-        if (!isAuthenticated) {
-            return <Navigate to="/login" />;
-        }
-
-        return children;
-    };
-
-    const PublicRoute = ({ children }) => {
-        const token = localStorage.getItem('token');
-
-        if (token) {
-            return <Navigate to="/administrable" />;
-        }
-
-        return children;
-    };
- 
     return (
         <BrowserRouter>
             <Routes>
-                <Route
-                    path="/login"
-                    element={
-                        <PublicRoute>
-                            <Login />
-                        </PublicRoute>
-                    }
-                />
-                <Route
-                    path="/administrable"
-                    element={
-                        <ProtectedRoute>
-                            <Administrable />
-                        </ProtectedRoute>
-                    }
-                />
+               
+                {renderPublicRoute("/login", <Login />)}
+
+                {renderProtectedRoute("/documentacion", <Documentacion />, [1])}
+
                 <Route path="/*" element={<Navigate to="/login" replace />} />
+
             </Routes>
         </BrowserRouter>
-    )
+    );
 }
 
 export default App;

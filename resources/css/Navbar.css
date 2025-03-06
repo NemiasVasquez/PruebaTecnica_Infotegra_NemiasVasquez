@@ -1,8 +1,7 @@
 /*USUARIO PERFIL*/
-
-
 .contenido_bloque_Usuario {
     cursor: pointer;
+    color: white; /* Aquí va el color del nombre de usuario*/
 }
 
 .bloque_Usuario h3 {
@@ -23,7 +22,7 @@
     background-color: #fff;
     border: 1px solid #ddd;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+    z-index: 10;
     border-radius: 5px;
 }
 
@@ -44,7 +43,7 @@
     background-color: transparent;
     border: none;
     cursor: pointer;
-    color: var(--azulCoespe);
+    color: #721817;
     font-size: 14px;
     margin: 0px;
     padding: 10px;

@@ -1,32 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import './Navbar.css';
-import ControlSidebar from './ControlSidebar';
-
+import '../../../css/Navbar.css';
+import { logout } from '../../Config/apiClient';
 const Navbar = () => {
-    const [pantallaPequena, setPantallaPequena] = useState(window.innerWidth < 768);
+    const [pantallaPequena, setPantallaPequena] = useState(window.innerWidth < 500);
     const [user, setUser] = useState(null);
     const [menuAbiertoCell, setMenuAbiertoCell] = useState(false);
-    const [sidebarAbierto, setSidebarAbierto] = useState(false);
-    const navigate = useNavigate();
-
+   
     const getUser = async () => {
-        const response = await axios.post('/me', null, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            }
-        });
-        setUser(response.data);
+        const nombre = localStorage.getItem('usuario')
+        nombre ? setUser(nombre) : setUser("usuario")
     };
 
     const toggleMenuAdmin = () => {
         setMenuAbiertoCell(!menuAbiertoCell);
-    };
-
-    const toggleSidebar = () => {
-        setSidebarAbierto(!sidebarAbierto);
     };
 
     useEffect(() => {
@@ -34,7 +20,6 @@ const Navbar = () => {
         const handleResizeAdmin = () => {
             setPantallaPequena(window.innerWidth < 500);
         };
-
         window.addEventListener('resize', handleResizeAdmin);
         return () => {
             window.removeEventListener('resize', handleResizeAdmin);
@@ -43,15 +28,7 @@ const Navbar = () => {
 
     const handleLogoutAdmin = async () => {
         try {
-            const token = localStorage.getItem('token');
-            await axios.post('/logout', {}, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            localStorage.removeItem('token');
-            navigate('/login');
+            logout();
         } catch (error) {
             console.error('Error al cerrar sesión:', error);
         }
@@ -59,18 +36,18 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="main-header navbar navbar-expand navbar-white navbar-light">
+            <nav className="main-header navbar navbar-expand" style={{ backgroundColor: '#0B6E4F' }}>
                 <ul className="navbar-nav">
                     <li className="nav-item">
                         <a className="nav-link" data-widget="pushmenu" href="#" role="button">
-                            <i className="fas fa-bars"></i>
+                            <i style={{ color: "#fff" }} className="fas fa-bars"></i>
                         </a>
                     </li>
                 </ul>
                 <ul className="navbar-nav ml-auto">
                     <li className="nav-item">
-                        <a className="nav-link" data-widget="fullscreen" href="#" role="button">
-                            <i className="fas fa-expand-arrows-alt"></i>
+                        <a className="nav-link" data-widget="fullscreen" role="button">
+                            <i style={{ color: "#fff" }} className="fas fa-expand-arrows-alt"></i>
                         </a>
                     </li>
                     <li className="nav-item">
@@ -79,8 +56,8 @@ const Navbar = () => {
                                 <h5 onClick={toggleMenuAdmin}>
                                     {user
                                         ? pantallaPequena
-                                            ? `${user.name.charAt(0)}.`
-                                            : user.name.substring(0, 15)
+                                            ? `${user.charAt(0)}.`
+                                            : user.substring(0, 15)
                                         : "PerfilUsuario"}
                                 </h5>
                                 {menuAbiertoCell && (
@@ -93,23 +70,8 @@ const Navbar = () => {
                             </div>
                         </div>
                     </li>
-                    <li className="nav-item">
-                        <a
-                            className="nav-link"
-                            data-widget="control-sidebar"
-                            data-controlsidebar-slide="true"
-                            href="#"
-                            role="button"
-                            onClick={toggleSidebar}
-                        >
-                            <i className="fas fa-th-large"></i>
-                        </a>
-                    </li>
                 </ul>
             </nav>
-
-            {/* Sidebar component */}
-            {sidebarAbierto && <ControlSidebar />}
         </>
     );
 };

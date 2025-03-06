@@ -1,33 +1,30 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Credenciales.css';
-
+import '../../css/Credenciales.css';
+import { login } from '../Config/apiClient';
+import { Colores } from '../Scripts/BibliotecaStyle';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [remember, setRemember] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
-            const response = await axios.post('/auth/login', {
-                email,
-                password,
-                remember
-            });
-
-            localStorage.setItem('token', response.data.access_token);
+            const response = await login(email, password);
+            if (response.error) {
+                alert("Las credenciales son incorrectas")
+                return;
+            }
 
             navigate('/administrable');
 
         } catch (err) {
             console.error('Error en el login:', err.response?.data || err.message);
-            setError('Credenciales incorrectas. Por favor, intenta nuevamente.');
+            setError('Error en el login:', err.response?.data || err.message);
         }
+
     };
 
     return (
@@ -35,26 +32,23 @@ const Login = () => {
             <div className="contenedor_FiltroNegro">
                 <div className="contenido_Login" style={{
                     width: '100%',
-                    backgroundImage: `url('/fontdoLogin.jpg')`,
-                    backgroundSize: 'cover',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center center',
-                    margin: '0px auto',
-                    backdropFilter: 'blur(50%)',
+                    backgroundColor: Colores["Crema"],
+
                 }}>
 
                     <div className="bloque_Login bloque_datos_login">
-                        <h4 className="text-center text-dark">RECAUDACIÓN - COESPELA</h4>
-                        <i><img src="/LogoCoespe.png" alt="Colegio estadístico del Perú" /></i>
+                        <h4 className="text-center text-dark">System Food - APPEXIA</h4>
+                        <i><img src="/ImagenLogin.png" alt="Logo Restaurantes Appex-IA" /></i>
 
                         {error && <p className="error">{error}</p>}
 
                         <form id="form_Login" onSubmit={handleSubmit}>
+                            <p>!Hola! Bienvenidos al sistema de Campos Chicken</p>
                             <input
-                                type="email"
+                                type="text"
                                 name="email"
                                 id="email"
-                                placeholder="Correo"
+                                placeholder="Usuario"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 autoComplete="email"
@@ -70,16 +64,7 @@ const Login = () => {
                                 autoComplete="current-password"
                                 required
                             />
-                            <div>
-                                <input
-                                    type="checkbox"
-                                    name="remember"
-                                    id="remember"
-                                    checked={remember}
-                                    onChange={(e) => setRemember(e.target.checked)}
-                                />
-                                <label htmlFor="remember">Recuérdame</label>
-                            </div>
+
                             <button type="submit">Iniciar Sesión</button>
                         </form>
                     </div>

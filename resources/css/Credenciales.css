@@ -1,5 +1,5 @@
 :root{
-    --azulCoespe: #1563b2;
+    --verdeRestaurante: #0B6E4F;
     --colorTextFooter: #85868C;
     --negroFooter :rgb(26, 28, 32);
     --anchoSitioWeb: 1200px;
@@ -33,13 +33,17 @@
 
 .bloque_datos_login{
     max-width: var(--anchoSitioWeb);
-    width: 40%;
+    width: auto;
     min-width: 250px;
     border: 1px solid gray;
     border-radius: 1em;
     padding: 50px 0px;
     background-color: rgba(232, 228, 228, 0.719);
     margin: 0px auto;
+}
+
+.bloque_datos_login h4{
+    padding: 0px 10%;
 }
 
 .contenido_Login img{
@@ -54,14 +58,21 @@
     height: 120px;
     width: 120px;
     margin-bottom: 0;
-    color: var(--azulCoespe);
+    color: var(--verdeRestaurante);
 }
 
 #form_Login{
     display: flex;
     flex-flow: column;
-    width: 70%;
+    width: 80%;
     margin: 0px auto;
+}
+
+#form_Login p{
+    font-size: 16px;
+    font-weight: 500;
+    margin: 10px 0px;
+    padding: 0px 10%;
 }
 
 #form_Login input{
@@ -70,13 +81,7 @@
     width: 100%;
     margin: 5px 0px;
     border: 1px solid var(--colorTextFooter);
-    border-radius: 1em;
-}
-
-#form_Login input[type="checkbox"]{
-    height: 15px;
-    width: 10%;
-
+    border-radius: 0.75em;
 }
 
 #form_Login div{
@@ -94,21 +99,23 @@
 
 
 #form_Login button{
-    background-color: var(--azulCoespe);
+    background-color: var(--verdeRestaurante);
     color: white;
     padding: 5px 12px;
     cursor: pointer;
-    border-color: var(--azulCoespe);
+    border-color: var(--verdeRestaurante);
     font-size: 15px;
     font-weight: 500;
-    border-radius: 1em;
+    margin-top: 20px;
+    border-radius: 0.75em;
     transition: 0.5s;
 }
 
 #form_Login button:hover{
-    color:var(--azulCoespe);
+    color:var(--verdeRestaurante);
     background-color: white;
-    font-size: 16px;
+    font-size: 15px;
+  
 }
 
 .error{

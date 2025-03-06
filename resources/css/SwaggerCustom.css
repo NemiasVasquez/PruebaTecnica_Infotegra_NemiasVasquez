@@ -1,0 +1,142 @@
+/* 🌟 Light Theme Swagger UI Custom Styles */
+.swagger-ui {
+    font-family: 'Inter', sans-serif !important;
+
+}
+
+.scheme-container{
+    display: none !important;
+}
+
+/* Contenedor principal con altura máxima y desplazamiento */
+.swagger-ui {
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+   
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Encabezado de la documentación */
+.swagger-ui .info {
+    background: #eef5ff !important;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 5px solid #007bff;
+}
+
+.swagger-ui .info h1 {
+    color: #0056b3 !important;
+    font-size: 24px !important;
+    margin-bottom: 5px;
+}
+
+.swagger-ui .info p {
+    color: #333 !important;
+    font-size: 14px;
+}
+
+/* Métodos de API (GET, POST, etc.) */
+.swagger-ui .opblock-summary-method {
+    color: #ffffff !important;
+    font-weight: bold !important;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+
+
+/* Bloques de operaciones */
+.swagger-ui .opblock {
+    border-radius: 10px !important;
+    background: #ffffff !important;
+    border: 1px solid #ddd !important;
+    margin-bottom: 15px;
+    padding: 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Separación entre parámetros */
+.swagger-ui .parameters-col_description,
+.swagger-ui .response-col_status {
+    font-weight: bold !important;
+    color: #333 !important;
+    font-size: 14px !important;
+}
+
+/* Resaltado de códigos de respuesta */
+.swagger-ui .response-col_status {
+    background: #eaf4ff !important;
+    color: #007bff !important;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Botones con mejor diseño */
+.swagger-ui .btn {
+    background-color: #007bff !important;
+    color: white !important;
+    border-radius: 5px !important;
+    padding: 8px 12px !important;
+    font-weight: bold !important;
+    text-transform: uppercase;
+    transition: background 0.3s ease-in-out;
+    border: none;
+}
+
+.swagger-ui .btn:hover {
+    background-color: #0056b3 !important;
+}
+
+/* Tablas con mejor organización */
+.swagger-ui table {
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+    width: 100%;
+}
+
+.swagger-ui table th {
+    background-color: #f1f1f1 !important;
+    color: #333 !important;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: left;
+}
+
+.swagger-ui table td {
+    background-color: #ffffff !important;
+    color: #555 !important;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Inputs y formularios */
+.swagger-ui input[type="text"],
+.swagger-ui input[type="password"] {
+    background: #ffffff !important;
+    color: #333 !important;
+    border: 1px solid #ccc !important;
+    padding: 8px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.swagger-ui select {
+    background: #ffffff !important;
+    color: #333 !important;
+    border: 1px solid #ccc !important;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+/* Código JSON */
+.swagger-ui .microlight {
+    background: #f8f9fa !important;
+    color: #333 !important;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+}
