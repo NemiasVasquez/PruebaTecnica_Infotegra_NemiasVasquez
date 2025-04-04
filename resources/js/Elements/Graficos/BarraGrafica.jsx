@@ -1,16 +1,23 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import { obtenerConfiguracionGrafico } from "./ConfiguracionGraficos";
-import CardDashboard from "../../Components/CardDashboard";
-
+import CardDashboard from "../Cards/CardDashboard";
+import { descargarImagen } from "../../Scripts/Functions/Funcionalidad/descargas";
 const BarraGrafica = ({ fechas, nombreGrafico, labels, data, chartType, horizontal, colors, className }) => {
     const canvasRef = useRef(null);
     const chartInstance = useRef(null);
+    const [diseño, setDiseño] = useState(chartType ?? 'bar');
+    const [orientacion, setOrientacion] = useState(horizontal ?? true);
+
+    const handledCambiarDiseño = () => { diseño == 'bar' ? setDiseño('doughnut') : setDiseño('bar') };
+
+    const handledCambiarOrientacion = () => { setOrientacion(!orientacion) };
 
     useEffect(() => {
-        const config = obtenerConfiguracionGrafico({ labels, data, chartType, horizontal, colors });
+        console.log("Diseño:", diseño, "Orientación:", orientacion);
+        const config = obtenerConfiguracionGrafico({ labels, data, chartType: diseño, horizontal: orientacion, colors });
         if (!config) return;
-
+        if (!canvasRef.current) return;
         const ctx = canvasRef.current.getContext("2d");
 
         if (chartInstance.current) {
@@ -24,32 +31,15 @@ const BarraGrafica = ({ fechas, nombreGrafico, labels, data, chartType, horizont
                 chartInstance.current.destroy();
             }
         };
-    }, [labels.join(","), data.join(","), chartType, horizontal, colors?.join(",")]);
-
-    const descargarImagen = () => {
-        if (!canvasRef.current) return;
-        const url = canvasRef.current.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${nombreGrafico} - ${fechas.fecha1} - ${fechas.fecha2}.png`;
-        link.click();
-    };
+    }, [labels.join(","), data.join(","), diseño, orientacion, colors?.join(",")]);
 
     return (
-        <CardDashboard className={className} nombreGrafico={nombreGrafico} descargarImagen={descargarImagen} html={
+        <CardDashboard tipo={diseño} cambiarDiseño={handledCambiarDiseño} cambiarOrientacion={handledCambiarOrientacion} className={className} nombreGrafico={nombreGrafico} descargarImagen={() => descargarImagen(canvasRef, nombreGrafico)} html={
             labels.length > 0 && data.length > 0 ? (
-                <div style={{
-                    width: "100%",
-                    overflowY: "auto",
-                    maxHeight: "250px",
-                    paddingBottom: "20px",
-                    scrollbarWidth: "none", 
-                    msOverflowStyle: "none" 
-                }}>
+                <div >
                     <div style={{
-                        height: `${Math.max(labels.length * 30, 250) + 20}px`,
-                        width: "100%",
-                        padding: "5px"
+                        height: `${Math.max(labels.length * 20, 250) + 20}px`,
+
                     }}>
                         <canvas ref={canvasRef} />
                     </div>

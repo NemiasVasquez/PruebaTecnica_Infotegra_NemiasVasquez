@@ -47,3 +47,8 @@ a.page-link:hover,li.paginate_button.page-item.inactive:hover{
     font-size: 17px;
     transition: 1s;
 }
+
+.dataTables_paginate, .buttons-columnVisibility {
+    cursor: pointer;
+}
+

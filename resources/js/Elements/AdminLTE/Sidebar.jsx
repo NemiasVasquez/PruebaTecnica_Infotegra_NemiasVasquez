@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Colores } from "../../Scripts/BibliotecaStyle";
-
+import { menuItems } from "../../Scripts/MenuIntems";
+import { contienePalabra } from "../../Scripts/Functions/Formato/texto";
 const Sidebar = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -14,63 +16,25 @@ const Sidebar = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const userRole = parseInt(localStorage.getItem("rol_id")) || 1;
+    const userPermisos = JSON.parse(localStorage.getItem('listaPermisos')) || [];
 
-    //permisos:
-    //Se debe consultar los permisos registrados.
-
-
-
-    const menuItems = [
-        {
-            name: "Gestión",
-            icon: "fas fa-tablets",
-            permisos: [1, 3],
-            subItems: [
-                { name: "Mesas", path: "/gestionMesas", permisos: [1, 3] },
-                { name: "Tipos de mesas", path: "/gestionTipoMesas", permisos: [1, 3] },
-            ],
-        },
-
-        {
-            name: "Ventas y facturas", path: "https://sistemafacturacion.appexia.cloud/",
-            icon: "fas fa-money-check",
-            permisos: [1, 3]
-        },
-
-        {
-            name: "Gestión de Platos",
-            icon: "fas fa-utensils",
-            permisos: [1, 3],
-            subItems: [
-                { name: "Platos", path: "/gestionProductos", permisos: [1, 3] },
-                { name: "Categorías platos", path: "/gestionCategorias", permisos: [1, 3] },
-            ],
-        },
-        {
-            name: "Gestión de Insumos",
-            icon: "fas fa-drumstick-bite",
-            permisos: [1, 2, 3],
-            subItems: [
-                { name: "Insumos", path: "/gestionInsumo", permisos: [1, 2] },
-                { name: "Categorías Insumos", path: "/gestionCategoriaInsumo", permisos: [1, 2] },
-            ],
-        },
-
-        { name: "Gestión promociones", path: "/gestionPromocion", icon: "fas fa-tag", permisos: [1, 3] },
-
-
-        { name: "Gestión empleados", path: "/gestionEmpleados", icon: "fas fa-users", permisos: [1] },
-
-
-        { name: "Documentación API", path: "/documentacion", icon: "fas fa-microchip", permisos: [1] },
-    ];
+    const userPermisoNombres = userPermisos.map(p => p.nombre.toLowerCase());
 
     const filteredMenu = menuItems
-        .filter(item => item.permisos.includes(userRole))
+        .filter(item =>
+            item.permisos.some(permiso =>
+                userPermisoNombres.some(userPermiso => contienePalabra(userPermiso, permiso.toLowerCase()))
+            )
+        )
         .map(item => ({
             ...item,
-            subItems: item.subItems ? item.subItems.filter(sub => sub.permisos.includes(userRole)) : null,
+            subItems: item.subItems
+                ? item.subItems.filter(sub =>
+                    sub.permisos.some(permiso =>
+                        userPermisoNombres.some(userPermiso => contienePalabra(userPermiso, permiso.toLowerCase()))
+                    )
+                )
+                : null,
         }))
         .filter(item => !item.subItems || item.subItems.length > 0);
 
@@ -105,7 +69,7 @@ const Sidebar = () => {
 
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4" style={{
-            backgroundColor: Colores["Verde"],
+            backgroundColor: Colores["FondoSliderbar"],
             position: "fixed", // Mantiene el Sidebar en pantalla
             top: 0,
             left: 0,
@@ -114,20 +78,21 @@ const Sidebar = () => {
             width: "250px", // Ajusta según el ancho que prefieras
             zIndex: 2000
         }}>
-            <div className="brand-link" style={{ cursor: "pointer", backgroundColor: Colores["Verde"] }}>
+            <div className="brand-link" style={{ cursor: "pointer", backgroundColor: Colores["FondoSliderbar"] }}>
                 <img
-                    src="/LogoSystemFood.png"
-                    alt="AppexIA- restaurante Logo"
+                    src="/LogoSliderbar.png"
+                    alt="Logo ECCI"
                     onClick={handleNavigation}
                     className="brand-image img-circle elevation-3"
-                    style={{ opacity: 1 }}
+                    style={{ opacity: 1, padding: '3px' }}
+
                 />
                 <span className="brand-text font-weight-light text-white" onClick={handleNavigation} style={{ fontSize: "17px" }}>
-                    TIC - ECCI
+                    <strong>Infraestructura Red</strong>
                 </span>
                 {isSmallScreen && (
                     <a className="nav-link barraCelular" data-widget="pushmenu" role="button">
-                        <i style={{ color: "#fff" }} className="fas fa-bars"></i>
+                        <i style={{ color: Colores["ColorBarraCelular"] }} className="fas fa-bars"></i>
                     </a>
                 )}
             </div>
@@ -146,11 +111,11 @@ const Sidebar = () => {
                                                 className={`nav-link ${isActiveMenu ? "active-menu" : ""}`}
                                                 onClick={() => toggleMenu(item.name)}
                                                 style={{
-                                                    backgroundColor: isActiveMenu ? "#28a745" : "transparent",
-                                                    color: isActiveMenu ? "white" : "#c2c7d0"
+                                                    backgroundColor: isActiveMenu ? Colores['MenuActivo'] : "transparent",
+                                                    color: isActiveMenu ? Colores["ColorLetraMenuActivo"] : Colores['ColorLetraMenuInactivo']
                                                 }}
                                             >
-                                                <i className={`nav-icon ${item.icon}`}></i>
+                                                <p className="mr-1"><FontAwesomeIcon icon={item.icon} /></p>
                                                 <p>
                                                     {item.name}
                                                     <i className={`right fas ${openMenus[item.name] ? "fa-angle-down" : "fa-angle-left"}`}></i>
@@ -162,8 +127,8 @@ const Sidebar = () => {
                                                         {subItem.path.startsWith("https") ? (
                                                             <a href={subItem.path} target="_blank" rel="noopener noreferrer" className="nav-link"
                                                                 style={{
-                                                                    backgroundColor: location.pathname === subItem.path ? "#28a745" : "transparent",
-                                                                    color: location.pathname === subItem.path ? "white" : "#f8f9fa"
+                                                                    backgroundColor: location.pathname === subItem.path ? Colores['MenuActivo'] : "transparent",
+                                                                    color: location.pathname === subItem.path ? Colores['ColorLetraMenuActivo'] : Colores['ColorLetraMenuInactivo']
                                                                 }}>
                                                                 <i className="far fa-circle nav-icon"></i>
                                                                 <p>{subItem.name}</p>
@@ -171,8 +136,8 @@ const Sidebar = () => {
                                                         ) : (
                                                             <Link to={subItem.path} className={`nav-link ${location.pathname === subItem.path ? "active-submenu" : ""}`}
                                                                 style={{
-                                                                    backgroundColor: location.pathname === subItem.path ? "#28a745" : "transparent",
-                                                                    color: location.pathname === subItem.path ? "white" : "#f8f9fa"
+                                                                    backgroundColor: location.pathname === subItem.path ? Colores['MenuActivo'] : "transparent",
+                                                                    color: location.pathname === subItem.path ? Colores['ColorLetraMenuActivo'] : Colores['ColorLetraMenuInactivo']
                                                                 }}>
                                                                 <i className="far fa-circle nav-icon"></i>
                                                                 <p>{subItem.name}</p>
@@ -181,19 +146,18 @@ const Sidebar = () => {
                                                     </li>
                                                 ))}
                                             </ul>
-
-
                                         </>
                                     ) : (
                                         <Link
                                             to={item.path}
                                             className={`nav-link ${isActiveMenu ? "active-menu" : ""}`}
                                             style={{
-                                                backgroundColor: isActiveMenu ? "#28a745" : "transparent",
-                                                color: isActiveMenu ? "white" : "#c2c7d0"
+                                                backgroundColor: isActiveMenu ? Colores['MenuActivo'] : "transparent",
+                                                color: isActiveMenu ? Colores['ColorLetraMenuActivo'] : Colores['ColorLetraMenuInactivo']
                                             }}
                                         >
-                                            <i className={`nav-icon ${item.icon}`}></i>
+                                            <p className="mr-1"><FontAwesomeIcon icon={item.icon} /></p>
+
                                             <p>{item.name}</p>
                                         </Link>
                                     )}

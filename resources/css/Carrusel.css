@@ -1,0 +1,39 @@
+.carousel-indicators [data-bs-target] {
+    width: 14px;
+    height: 5px;
+    background-color: #000 !important;
+    opacity: 0.7;
+    margin-bottom: -20px;
+}
+
+.carousel-indicators .active {
+    background-color: #6190c3 !important;
+    opacity: 1;
+}
+
+.carousel-item {
+    transition: transform 0.4s ease-in-out;
+}
+
+
+/*************/
+
+.full-width {
+    width: 100%;
+}
+
+.half-width {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .half-width {
+        width: calc(50% - 5px);
+    }
+}
+
+.contenedor-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Puedes ajustar el espacio */
+}

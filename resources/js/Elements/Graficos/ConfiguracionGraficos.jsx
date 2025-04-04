@@ -12,6 +12,8 @@ export const obtenerConfiguracionGrafico = ({ labels, data, chartType, horizonta
     const backgroundColors = colors || defaultColors;
     const borderColors = backgroundColors.map(c => c.replace("0.7", "1"));
 
+    const esCircular = chartType === "pie" || chartType === "doughnut";
+
     return {
         type: chartType,
         data: {
@@ -28,53 +30,65 @@ export const obtenerConfiguracionGrafico = ({ labels, data, chartType, horizonta
         },
 
         options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        autoSkip: false, // NO OMITIR ETIQUETAS
-                        maxRotation: 0,
-                        minRotation: 0,
-                        font: {
-                            size: 12, // Ajusta el tamaño de las etiquetas
-                            weight: "bold",
+            // Oculta las escalas si es pie o doughnut
+            scales: esCircular
+                ? {}
+                : {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            autoSkip: false,
+                            maxRotation: 0,
+                            minRotation: 0,
+                            font: { size: 12, weight: "bold" },
+                            color: "#333",
                         },
-                        color: "#333", // Color de texto
-                    }
-                },
-                x: {
-                    beginAtZero: true,
-                    ticks: {
-                        autoSkip: false, // Asegurar que no se oculten etiquetas en X tampoco
-                        font: {
-                            size: 12,
-                            weight: "bold",
+                    },
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            autoSkip: false,
+                            font: { size: 12, weight: "bold" },
+                            color: "#333",
                         },
-                        color: "#333",
                     },
                 },
-            },
+
             responsive: true,
             maintainAspectRatio: false,
             indexAxis: horizontal ? "y" : "x",
-          
+            cutout: esCircular && chartType === "doughnut" ? "50%" : undefined, // Reducir tamaño en doughnut
+            radius: esCircular ? "80%" : undefined, // Reducir radio en pie
             plugins: {
-                legend: { display: chartType === "doughnut" || chartType === "pie" },
-                tooltip: { enabled: true },
+
+                legend: { display: esCircular },
+                tooltip: { enabled: true, bodyFont: { size: 7 }, },
                 datalabels: {
+
                     color: "#fff",
                     backgroundColor: "rgba(0, 0, 0, 0.6)",
                     borderRadius: 5,
                     padding: 4,
-                    anchor: chartType === "doughnut" || chartType === "pie" ? "end" : "end",
+                    anchor: esCircular ? "end" : "end",
                     align: "center",
-                    offset: 5,
-                    formatter: (value, ctx) => chartType === "doughnut" ? `${ctx.chart.data.labels[ctx.dataIndex]}: ${value}` : value,
-                    font: {
-                        weight: "bold",
-                        size: 12,
+                    offset: 10,
+                    clamp: true,
+                    display: (context) => {
+                        if (esCircular) {
+                            const dataset = context.dataset;
+                            const value = dataset.data[context.dataIndex];
+
+                            const total = dataset.data.reduce((acc, val) => acc + val, 0);
+                            return value / total >= 0.05;
+                        }
                     },
-                    clip: false,
+                    formatter: (value, ctx) => {
+                        const dataset = ctx.dataset;
+                        const total = dataset.data.reduce((acc, val) => acc + val, 0);
+                        const percentage = ((value / total) * 100).toFixed(1) + "%";
+
+                        return esCircular ? `${ctx.chart.data.labels[ctx.dataIndex]}: ${value} (${percentage})` : `${value}`
+                    },
                 },
             },
         },

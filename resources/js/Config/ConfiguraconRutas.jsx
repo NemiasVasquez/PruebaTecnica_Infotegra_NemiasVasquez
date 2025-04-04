@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { logout as apiLogout } from './apiClient'; 
+import { logout as apiLogout } from './apiClient';
+import { contienePalabra } from '../Scripts/Functions/Formato/texto'
 
-export const LimpiarDatosLocalStorage=async()=>{
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    localStorage.removeItem('listaPermisos');
-    localStorage.removeItem('nombre');
+export const LimpiarDatosLocalStorage = async () => {
+    localStorage.clear();
 }
 
 const hasSessionExpired = (lastLogin) => {
     const currentTime = Date.now();
-    const sessionTimeLimit = 5 * 60 * 60 * 1000;
+    const sessionTimeLimit = 8 * 60 * 60 * 1000;//8 Horas
     return lastLogin && currentTime - lastLogin >= sessionTimeLimit;
 };
 
@@ -27,7 +25,7 @@ const handleLogout = async (navigate, setIsAuthenticated) => {
 
 const initializeSession = (setIsAuthenticated) => {
     setIsAuthenticated(true);
-    localStorage.setItem('lastLogin', Date.now()); 
+    localStorage.setItem('lastLogin', Date.now());
 };
 
 const manageSession = (token, setLoading, setIsAuthenticated, navigate) => {
@@ -37,7 +35,7 @@ const manageSession = (token, setLoading, setIsAuthenticated, navigate) => {
     } else {
         initializeSession(setIsAuthenticated);
     }
-    setLoading(false); 
+    setLoading(false);
 };
 
 export const ProtectedRoute = ({ children, allowedPermisos }) => {
@@ -46,6 +44,7 @@ export const ProtectedRoute = ({ children, allowedPermisos }) => {
     const navigate = useNavigate();
 
     const token = localStorage.getItem('token');
+    const listaPermisos = JSON.parse(localStorage.getItem('listaPermisos')) || [];
 
     useEffect(() => {
         if (!token) {
@@ -67,14 +66,21 @@ export const ProtectedRoute = ({ children, allowedPermisos }) => {
         return <Navigate to="/login" />;
     }
 
-    if (!allowedPermisos.includes(userRole)) {
-        alert("No tiene acceso a esta funcionalidad del sistema.");
+    if (allowedPermisos.includes('todos')) {
+        return children;
+    }
+
+    const tieneAcceso = listaPermisos.some(permiso =>
+        allowedPermisos.some(allowed => contienePalabra(permiso.nombre, allowed))
+    );
+
+    if (!tieneAcceso) {
+        alert("No tiene acceso a esta funcionalidad del sistema.")
         return <Navigate to="/administrable" />;
     }
 
     return children;
 };
-
 
 export const PublicRoute = ({ children }) => {
     const token = localStorage.getItem('token');

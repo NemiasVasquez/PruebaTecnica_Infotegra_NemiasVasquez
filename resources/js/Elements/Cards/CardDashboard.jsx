@@ -1,10 +1,13 @@
-const CardDashboard = ({ className, nombreGrafico, descargarImagen, html }) => {
+import Boton from "../../Components/Boton";
+const CardDashboard = ({ className, nombreGrafico, descargarImagen, html, cambiarDiseño, cambiarOrientacion, tipo }) => {
     return (
         <div className={className}>
-            <div className="card card-success">
+            <div className="card card-info">
                 <div className="card-header">
                     <h3 className="card-title">{nombreGrafico}</h3>
                     <div className="card-tools">
+                        <Boton className={'btn btn-light'} texto={"Diseño"} funcion={() => cambiarDiseño()} />
+                        {tipo == "bar" ? <Boton className={'btn btn-warning ml-2'} texto={"Orientación"} funcion={() => cambiarOrientacion()} /> : ''}
                         {descargarImagen && (
                             <button onClick={descargarImagen} className="btn btn-info btn-sm ml-1">
                                 <i className="fas fa-download"></i>

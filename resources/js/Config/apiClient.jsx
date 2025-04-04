@@ -1,6 +1,10 @@
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { baseUrls } from './baseUrl';
 import { LimpiarDatosLocalStorage } from './ConfiguraconRutas';
+import { redirectToLogin } from './AuthHelper';
+import { obtenerHoraActual } from '../Scripts/Functions/Formato/fechas';
+import { useLoader } from '../Elements/Loader/LoaderProvider';
 
 let currentBaseUrlIndex = 0;
 
@@ -21,47 +25,59 @@ api.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-
   return config;
 }, (error) => Promise.reject(error));
 
-const retryRequest = async (error) => {
-  if (error.code === 'ERR_NETWORK' && currentBaseUrlIndex < baseUrls.length - 1) {
-    console.warn(`⚠️ Falló conexión con ${baseUrls[currentBaseUrlIndex]}, probando siguiente URL...`);
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.code === 'ERR_NETWORK' && currentBaseUrlIndex < baseUrls.length - 1) {
+      console.warn(`⚠️ Falló conexión con ${baseUrls[currentBaseUrlIndex]}, probando siguiente URL...`);
+      currentBaseUrlIndex++;
+      api = createApiInstance(baseUrls[currentBaseUrlIndex]);
+      return api.request(error.config);
+    }
 
-    currentBaseUrlIndex++; 
-    
-    api = createApiInstance(baseUrls[currentBaseUrlIndex]); 
+    if (error.response && error.response.status === 401) {
+      console.warn("⚠️ Token expirado. Redirigiendo al login...");
+      await redirectToLogin();
+      return Promise.reject(error);
+    }
 
-    return api.request(error.config);
+    return Promise.reject(error);
   }
-  return Promise.reject(error);
-};
+);
 
-api.interceptors.response.use(response => response, retryRequest);
+export default api;
 
 // 🔹 LOGIN
 export const login = async (dni, password) => {
   const formData = new FormData();
-  formData.append('documento_identidad', dni);
-  formData.append('password', password);
+  formData.append("usuario", dni);
+  formData.append("password", password);
 
   try {
-    const response = await api.post('/auth/login', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    const response = await api.post("/auth/login", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
 
     if (response.data.token) {
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('nombre', response.data.nombre);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("nombre", response.data.nombre);
+      localStorage.setItem("usuario", response.data.usuario);
+      localStorage.setItem("listaPermisos", JSON.stringify(response.data.listaPermisos));
+      localStorage.setItem("idUsuario", response.data.idUsuario);
     }
 
     return response.data;
   } catch (error) {
-    console.error("Error: ", error);
-    throw error.response?.data || { error: 'Error de conexión con el servidor' };
+    await LimpiarDatosLocalStorage();
+
+    if (error) {
+      alert(error.response.data.alert || "Credenciales erróneas.");
+    } else {
+      alert("Error de conexión con el servidor.");
+    }
   }
 };
 
@@ -69,19 +85,24 @@ export const login = async (dni, password) => {
 export const logout = async () => {
   try {
     await api.post('/logout');
-    await LimpiarDatosLocalStorage(); 
-    window.location.href = '/login'; 
+    await LimpiarDatosLocalStorage();
+    await redirectToLogin();
   } catch (error) {
-    return error.response?.data || { error: 'Error de conexión con el servidor' };
+    await LimpiarDatosLocalStorage();
+    await redirectToLogin();
   }
 };
 
+
+// 🔹 OBTENER DATOS
 export const obtenerDataProtegida = async (endpoint) => {
   try {
     const response = await api.post(endpoint);
     return response.data;
   } catch (error) {
-    throw error.response?.data || { error: 'No se pudo obtener la información' };
+    console.error("Error al obtener información:", error);
+    alert(error.response.data.alert || "Error al obtener información.");
+  } finally {
   }
 };
 
@@ -95,9 +116,10 @@ export const enviarFormulario = async (endpoint, formData) => {
     });
     return response.data;
   } catch (error) {
-    throw error.response?.data || { error: 'Error al enviar el formulario' };
+    console.error("Error al enviar el formulario:", error);
+    alert(error.response.data.alert || "Error al enviar el formulario");
+
+  } finally {
   }
 };
 
-
-export default api;

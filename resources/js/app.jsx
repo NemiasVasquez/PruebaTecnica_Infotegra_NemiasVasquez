@@ -1,21 +1,26 @@
-import './Config/bootstrap';
 import React from 'react';
+
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
+import NavigateSetter from './Config/NavigateSetter';
 
 import Login from './Pages/Login';
 
 import Documentacion from './Pages/Documentacion';
 
-import { ProtectedRoute } from './Config/ConfiguraconRutas';
-import { PublicRoute } from './Config/ConfiguraconRutas';
+import Administrable from './Pages/Administrable';
+
+import MiPerfil from './Pages/MiPerfil';
+
+import { ProtectedRoute, PublicRoute } from './Config/ConfiguraconRutas';
 
 function App() {
 
-    const renderProtectedRoute = (path, component, allowedRoles) => (
+    const renderProtectedRoute = (path, component, allowedPermisos) => (
         <Route
             path={path}
             element={
-                <ProtectedRoute allowedRoles={allowedRoles}>
+                <ProtectedRoute allowedPermisos={allowedPermisos}>
                     {component}
                 </ProtectedRoute>
             }
@@ -34,17 +39,24 @@ function App() {
     );
 
     return (
+
         <BrowserRouter>
             <Routes>
-               
+                
                 {renderPublicRoute("/login", <Login />)}
 
-                {renderProtectedRoute("/documentacion", <Documentacion />, [1])}
+                {/* IMPORTANTE ----> Para poder definir si tiene o no los permisos se debe asignar la palabra dentro del array en renderProtecteRoute */}
+
+                {renderProtectedRoute("/administrable", <Administrable />, ['todos'])}
+
+                {renderProtectedRoute("/perfil", <MiPerfil />, ['todos'])}
+
+                {renderProtectedRoute("/documentacion", <Documentacion />, ['documentación'])}
 
                 <Route path="/*" element={<Navigate to="/login" replace />} />
-
             </Routes>
         </BrowserRouter>
+
     );
 }
 

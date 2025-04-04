@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../css/Credenciales.css';
 import { login } from '../Config/apiClient';
-import { Colores } from '../Scripts/BibliotecaStyle';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -28,22 +27,27 @@ const Login = () => {
     };
 
     return (
-        <div className="contenedor">
+        <div className="contenedor" style={{
+            width: '100%',
+            backgroundImage: `url('/fondoLogin.jpg')`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center center',
+            margin: '0px auto',
+        }}>
             <div className="contenedor_FiltroNegro">
                 <div className="contenido_Login" style={{
-                    width: '100%',
-                    backgroundColor: Colores["Crema"],
-
+                   backdropFilter: 'blur(3px)',
                 }}>
 
                     <div className="bloque_Login bloque_datos_login">
-                        <h4 className="text-center text-dark">System Food - APPEXIA</h4>
-                        <i><img src="/ImagenLogin.png" alt="Logo Restaurantes Appex-IA" /></i>
+                        <h4 className="text-center text-dark">Sistema Infraestructura Red- ECCI</h4>
+                        <i><img src="/Logo.png" alt="ECCI" /></i>
 
                         {error && <p className="error">{error}</p>}
 
                         <form id="form_Login" onSubmit={handleSubmit}>
-                            <p>!Hola! Bienvenidos al sistema de Campos Chicken</p>
+                            <p>Gestión de equipos de red - TIC ECCI</p>
                             <input
                                 type="text"
                                 name="email"

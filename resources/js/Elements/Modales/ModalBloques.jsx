@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Colores } from "../Scripts/BibliotecaStyle";
-import { formatDate } from "../Scripts/BibliotecaStyle";
+import { Colores } from "../../Scripts/BibliotecaStyle";
+import { formatDate } from "../../Scripts/Functions/Formato/fechas";
 const ModalBloques = ({ cerrarModal, nombreModal, datos, enviarPromocion, datosVisita }) => {
     const [promoSeleccionada, setPromoSeleccionada] = useState(null);
     return (

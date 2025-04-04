@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import {useLocation, useNavigate } from "react-router-dom";
 import '../../../css/Navbar.css';
 import { logout } from '../../Config/apiClient';
+import { Colores } from '../../Scripts/BibliotecaStyle';
 const Navbar = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const [pantallaPequena, setPantallaPequena] = useState(window.innerWidth < 500);
     const [user, setUser] = useState(null);
     const [menuAbiertoCell, setMenuAbiertoCell] = useState(false);
-   
+
     const getUser = async () => {
         const nombre = localStorage.getItem('usuario')
         nombre ? setUser(nombre) : setUser("usuario")
@@ -14,6 +19,10 @@ const Navbar = () => {
     const toggleMenuAdmin = () => {
         setMenuAbiertoCell(!menuAbiertoCell);
     };
+
+    const miPerfil = () => {
+        navigate("/perfil");
+    }
 
     useEffect(() => {
         getUser();
@@ -26,28 +35,20 @@ const Navbar = () => {
         };
     }, []);
 
-    const handleLogoutAdmin = async () => {
-        try {
-            logout();
-        } catch (error) {
-            console.error('Error al cerrar sesión:', error);
-        }
-    };
-
     return (
         <>
-            <nav className="main-header navbar navbar-expand" style={{ backgroundColor: '#0B6E4F' }}>
+            <nav className="main-header navbar navbar-expand" style={{ backgroundColor: Colores['FondoNavbar'] }}>
                 <ul className="navbar-nav">
                     <li className="nav-item">
                         <a className="nav-link" data-widget="pushmenu" href="#" role="button">
-                            <i style={{ color: "#fff" }} className="fas fa-bars"></i>
+                            <i style={{ color: Colores['ColorLetraNavbar'] }} className="fas fa-bars"></i>
                         </a>
                     </li>
                 </ul>
                 <ul className="navbar-nav ml-auto">
                     <li className="nav-item">
                         <a className="nav-link" data-widget="fullscreen" role="button">
-                            <i style={{ color: "#fff" }} className="fas fa-expand-arrows-alt"></i>
+                            <i style={{ color: Colores['ColorLetraNavbar'] }} className="fas fa-expand-arrows-alt"></i>
                         </a>
                     </li>
                     <li className="nav-item">
@@ -63,7 +64,10 @@ const Navbar = () => {
                                 {menuAbiertoCell && (
                                     <ul>
                                         <li>
-                                            <button onClick={handleLogoutAdmin}>Cerrar Sesión</button>
+                                            <button onClick={miPerfil}>Mi Perfil</button>
+                                        </li>
+                                        <li>
+                                            <button onClick={() => { logout() }}>Cerrar Sesión</button>
                                         </li>
                                     </ul>
                                 )}

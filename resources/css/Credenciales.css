@@ -22,24 +22,24 @@
 }
 
 .contenedor_FiltroNegro{
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .bloque_Login{
-    width: 50%;
+    width: 70%;
     margin: 0px auto;
     text-align: center;
 }
 
 .bloque_datos_login{
     max-width: var(--anchoSitioWeb);
-    width: auto;
-    min-width: 250px;
+    width: 30%;
+    min-width: 350px;
     border: 1px solid gray;
     border-radius: 1em;
     padding: 50px 0px;
     background-color: rgba(232, 228, 228, 0.719);
-    margin: 0px auto;
+    margin: 10px auto;
 }
 
 .bloque_datos_login h4{
@@ -47,9 +47,10 @@
 }
 
 .contenido_Login img{
-    width: 80%;
+    width: 30%;
+    max-height: 80%;
     padding: 15px;
-    min-width: 200px;
+    min-width: 180px;
     max-width: 250px;
 }
 
