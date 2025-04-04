@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import axios from 'axios';
 import { baseUrls } from './baseUrl';
 import { LimpiarDatosLocalStorage } from './ConfiguraconRutas';
@@ -82,15 +81,11 @@ export const login = async (dni, password) => {
 };
 
 // 🔹 LOGOUT
+// 🔹 LOGOUT
 export const logout = async () => {
-  try {
-    await api.post('/logout');
-    await LimpiarDatosLocalStorage();
-    await redirectToLogin();
-  } catch (error) {
-    await LimpiarDatosLocalStorage();
-    await redirectToLogin();
-  }
+  await api.post('/logout'); // Asegura que la API responda antes de continuar
+  await LimpiarDatosLocalStorage(); // Limpia los datos
+  window.location.href = "/login";
 };
 
 

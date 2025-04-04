@@ -1,3 +1,5 @@
+import { LimpiarDatosLocalStorage } from "./ConfiguraconRutas";
+
 let navigateFunction = null;
 
 export const setNavigateFunction = (navigate) => {
@@ -5,12 +7,6 @@ export const setNavigateFunction = (navigate) => {
 };
 
 export const redirectToLogin = async () => {
-  if (navigateFunction) {
-    alert("Se ha cerrado la sesión...")
-    await LimpiarDatosLocalStorage();
-    navigateFunction("/login");
-  } else {
-    console.warn("⚠️ No se pudo redirigir, usando fallback...");
-    window.location.href = "/login"; // Fallback si no hay navegación activa
-  }
+    await LimpiarDatosLocalStorage(); // Limpia antes de redirigir
+    window.location.href = "/login"; // Usa redirección directa
 };

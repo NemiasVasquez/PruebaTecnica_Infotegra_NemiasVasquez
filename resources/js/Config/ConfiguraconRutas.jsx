@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { logout as apiLogout } from './apiClient';
 import { contienePalabra } from '../Scripts/Functions/Formato/texto'
 
@@ -9,62 +9,27 @@ export const LimpiarDatosLocalStorage = async () => {
 
 const hasSessionExpired = (lastLogin) => {
     const currentTime = Date.now();
-    const sessionTimeLimit = 8 * 60 * 60 * 1000;//8 Horas
+    const sessionTimeLimit = 10 * 60 * 60 * 1000  ;// 10 horas en milisegundos
     return lastLogin && currentTime - lastLogin >= sessionTimeLimit;
 };
 
-const handleLogout = async (navigate, setIsAuthenticated) => {
-    const result = await apiLogout();
-    if (result.message === 'Logout exitoso') {
-        setIsAuthenticated(false);
-        alert('Sesión terminada');
-    } else {
-        alert(result.error || 'Error al cerrar sesión');
-    }
-};
-
-const initializeSession = (setIsAuthenticated) => {
-    setIsAuthenticated(true);
-    localStorage.setItem('lastLogin', Date.now());
-};
-
-const manageSession = (token, setLoading, setIsAuthenticated, navigate) => {
+const manageSession = () => {
     const lastLogin = localStorage.getItem('lastLogin');
     if (hasSessionExpired(lastLogin)) {
-        handleLogout(navigate, setIsAuthenticated);
+        alert("Se cerrará la sesión - solo dura 8 horas");
+        apiLogout();
     } else {
-        initializeSession(setIsAuthenticated);
+        localStorage.setItem('lastLogin', Date.now());
     }
-    setLoading(false);
 };
 
 export const ProtectedRoute = ({ children, allowedPermisos }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
-
     const token = localStorage.getItem('token');
     const listaPermisos = JSON.parse(localStorage.getItem('listaPermisos')) || [];
 
     useEffect(() => {
-        if (!token) {
-            setLoading(false);
-            return;
-        }
-        manageSession(token, setLoading, setIsAuthenticated, navigate);
-    }, [token, navigate]);
-
-    if (loading) {
-        return (
-            <div className="spinner-border text-light" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </div>
-        );
-    }
-
-    if (!isAuthenticated) {
-        return <Navigate to="/login" />;
-    }
+       token? manageSession() :''
+    }, []);
 
     if (allowedPermisos.includes('todos')) {
         return children;
