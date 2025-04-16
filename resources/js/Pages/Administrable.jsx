@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import PlantillaBase from '../Elements/PantillaBase';
-import {obtenerPermisosGenerales} from '../Scripts/Functions/Datos/almacenamiento'
-
-import { getData } from '../Scripts/Functions/Datos/petionesApi';
+import Card from '../Elements/Cards/Card';
 const Administrable = () => {
-    const [dataDashBoard, setDataDashboard] = useState([]);
-
-    useEffect(() => {
-        obtenerPermisosGenerales();
-        getData('/obtenerDatosDashboard').then(res => setDataDashboard(res))
-    }, []);
 
     return (
         <PlantillaBase
             html={
-                <div className="container-fluid">
-                   Dashboard
+                <div className="d-flex justify-content-center align-items-center">
+                    <Card texto={"Info"}
+                        cardStyle={"card-info"}
+                        codigoHtml={
+                            <div className='d-flex justify-content-center'>
+                                <p className='text-center'> Se presenta el desarrollo de la prueba técnica para la empresa Infotegra realizada por Nemias Vasquez</p>
+                            </div>
+                        } />
                 </div>
             }
         />

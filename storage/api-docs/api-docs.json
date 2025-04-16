@@ -1,0 +1,120 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Prueba técnica - Infotegra",
+        "description": "Documentación del Backend creada.",
+        "contact": {
+            "email": "nemiasvasquezs@hotmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/obtenerPersonajes": {
+            "get": {
+                "tags": [
+                    "Personajes"
+                ],
+                "summary": "Obtener todos los personajes",
+                "description": "Retorna una lista de personajes.",
+                "operationId": "f9f56682b4c7e3c7c0d0a0ad39a48bb3",
+                "responses": {
+                    "200": {
+                        "description": "Listado de personajes"
+                    },
+                    "404": {
+                        "description": "No se hane encontrado personajes registrados."
+                    }
+                }
+            }
+        },
+        "/guardarListaPersonajes": {
+            "post": {
+                "tags": [
+                    "Personajes"
+                ],
+                "summary": "Guardar la lista de personajes",
+                "description": "Guarda los 100 registros de la API R&M",
+                "operationId": "776ffcc3638332c4b1367efaee6f9086",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "personajes"
+                                ],
+                                "properties": {
+                                    "personajes": {
+                                        "type": "list",
+                                        "example": "[{personaje}...]"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Listado de personajes guardada"
+                    },
+                    "400": {
+                        "description": "Error en los datos al guardar la lista."
+                    }
+                }
+            }
+        },
+        "/actualizarPersonaje/{id}": {
+            "post": {
+                "tags": [
+                    "Personajes"
+                ],
+                "summary": "Actualizar un Personaje",
+                "operationId": "480951ea4851c59fabbe6d778cb65b3a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "id"
+                                ],
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "404": {
+                        "description": "Personaje no encontrado"
+                    },
+                    "200": {
+                        "description": "Personaje actualizado exitosamente"
+                    },
+                    "400": {
+                        "description": "Formato de datos inválidos"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Personajes",
+            "description": "Gestión de Personajes."
+        }
+    ],
+    "security": {
+        "bearerAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization"
+        }
+    }
+}

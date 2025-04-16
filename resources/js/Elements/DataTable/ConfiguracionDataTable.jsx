@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import { crearBotonExportar } from './CrearBotonExportar';
 
-export const configuracionDataTable = (tableRef, tituloTabla, nombreReportes, nombreUsuario, listaDatos, pagination = null) => {
+export const configuracionDataTable = (tableRef, tituloTabla, nombreReportes, nombreUsuario = "Prueba Infotegra", listaDatos, pagination = null) => {
     const tableId = `#${tituloTabla}`;
 
     if (!$.fn.dataTable.isDataTable(tableId)) {

@@ -2,58 +2,27 @@ import React from 'react';
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-import NavigateSetter from './Config/NavigateSetter';
-
-import Login from './Pages/Login';
-
 import Documentacion from './Pages/Documentacion';
-
 import Administrable from './Pages/Administrable';
 
-import MiPerfil from './Pages/MiPerfil';
-
-import { ProtectedRoute, PublicRoute } from './Config/ConfiguraconRutas';
+import ConsultaApi from './Pages/ConsultaApi';
+import ConsultaDB from './Pages/ConsultaDB';
 
 function App() {
-
-    const renderProtectedRoute = (path, component, allowedPermisos) => (
-        <Route
-            path={path}
-            element={
-                <ProtectedRoute allowedPermisos={allowedPermisos}>
-                    {component}
-                </ProtectedRoute>
-            }
-        />
-    );
-
-    const renderPublicRoute = (path, component) => (
-        <Route
-            path={path}
-            element={
-                <PublicRoute>
-                    {component}
-                </PublicRoute>
-            }
-        />
-    );
 
     return (
 
         <BrowserRouter>
             <Routes>
-                
-                {renderPublicRoute("/login", <Login />)}
 
-                {/* IMPORTANTE ----> Para poder definir si tiene o no los permisos se debe asignar la palabra dentro del array en renderProtecteRoute */}
+                <Route path='/documentacion' element={<Documentacion />} />
 
-                {renderProtectedRoute("/administrable", <Administrable />, ['todos'])}
+                <Route path='/administrable' element={<Administrable />} />
 
-                {renderProtectedRoute("/perfil", <MiPerfil />, ['todos'])}
+                <Route path='/consultaApi' element={<ConsultaApi />} />
+                <Route path='/consultaDB' element={<ConsultaDB />} />
 
-                {renderProtectedRoute("/documentacion", <Documentacion />, ['documentación'])}
-
-                <Route path="/*" element={<Navigate to="/login" replace />} />
+                <Route path="/*" element={<Navigate to="/administrable" replace />} />
             </Routes>
         </BrowserRouter>
 

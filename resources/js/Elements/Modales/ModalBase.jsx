@@ -1,6 +1,6 @@
 import React from "react";
 import { Colores } from "../../Scripts/BibliotecaStyle";
-import { exportToExcel } from "../../Scripts/Functions/Funcionalidad/exportacion";
+import { exportToExcel } from "../../Scripts/Functions/exportacion";
 
 const ModalBase = ({ cerrarModal, nombreModal, children, datos = [], exportable = false }) => {
     return (

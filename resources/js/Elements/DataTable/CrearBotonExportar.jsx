@@ -1,4 +1,5 @@
-import { obtenerHoraActual } from "../../Scripts/Functions/Formato/fechas";
+import { obtenerHoraActual } from "../../Scripts/Functions/fechas";
+
 export const crearBotonExportar = (extend, text, nombreReportes, nombreUsuario, conPersonalizacion = false) => {
     const config = {
         extend,
@@ -36,6 +37,5 @@ export const crearBotonExportar = (extend, text, nombreReportes, nombreUsuario, 
         };
     }
 
-    
     return config;
 };

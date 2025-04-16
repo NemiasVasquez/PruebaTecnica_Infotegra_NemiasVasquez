@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Sidebar from "./AdminLTE/Sidebar";
 import Navbar from "./AdminLTE/Navbar";
 import Footer from "./AdminLTE/Footer";
-import Preload from "./AdminLTE/Preload";
 
 const PlantillaBase = ({ html }) => {
 

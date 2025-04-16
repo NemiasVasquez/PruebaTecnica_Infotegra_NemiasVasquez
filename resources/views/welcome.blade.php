@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infraestructura Rec - ECCI</title>
+    <title>Infoterga - Prueba técnica</title>
 
     <!-- AdminLTE y otros estilos necesarios -->
     @vite('node_modules/admin-lte/dist/css/adminlte.min.css')
@@ -19,18 +19,9 @@
 </head>
 
 <body>
-    <script>
-        @if(!empty($message))
-            localStorage.setItem('error', "{{ $message }}");
-        @else
-            localStorage.removeItem('error');
-        @endif
-    </script>
-
     <div id="root">
 
     </div>
-
 
     @viteReactRefresh
     @vite('resources/js/index.jsx')
